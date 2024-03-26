@@ -32,7 +32,7 @@ fi
 bin_path="${RUNNER_TEMP}/bin"
 mkdir -p "${bin_path}"
 tar_path="${bin_path}/mark.tar.gz"
-curl --compressed --silent "${url}" -o "${tar_path}"
+curl -sL "${url}" -o "${tar_path}"
 tar -xf "${tar_path}" -C "${bin_path}"
 rm -f "${tar_path}"
 echo "${bin_path}" >> "$GITHUB_PATH"
