@@ -10,37 +10,23 @@ This action installs [mark](https://github.com/kovetskiy/mark) CLI tool.
 
 Supported OS: Linux and macOS.
 
+## Prerequisites
+
+The following tools have to be available on a runner prior using this GitHub
+action:
+
+- [curl](https://curl.se/)
+- [tar](https://www.gnu.org/software/tar/)
+
 ## Inputs
 
-<!-- prettier-ignore-start -->
-| Name    | Required | Description                                                                                 | Default  |
-|---------|----------|---------------------------------------------------------------------------------------------|----------|
-| version | No       | Version of `mark` tool that can be found [here](https://github.com/kovetskiy/mark/releases) | `9.11.1` |
-<!-- prettier-ignore-end -->
-
-## Example usage
-
-### Workflow configuration
-
 ```yaml
-name: Test
-
-on: push
-
-jobs:
-  setup:
-    name: Print version
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@main
-      - uses: fabasoad/setup-mark-action@main
-      - name: Run command
-        run: mark --version
+- uses: fabasoad/setup-mark-action@v0
+  with:
+    # (Optional) mark version. Defaults to "9.11.1".
+    version: "9.11.1"
 ```
 
-### Result
+## Outputs
 
-```shell
-Run mark --version
-mark version 9.11.1
-```
+None.
