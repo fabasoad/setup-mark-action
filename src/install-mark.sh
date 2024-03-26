@@ -3,7 +3,7 @@
 mark_version="$1"
 
 # shellcheck disable=SC2039
-if command -v mark &> /dev/null; then
+if command -v mark >/dev/null 2>&1; then
   msg="$(mark --version) is already installed. Skipping installation."
   printf "[setup-mark-action] %s level=info %s\n" "$(date +'%Y-%m-%d %T')" "${msg}"
   exit 0
