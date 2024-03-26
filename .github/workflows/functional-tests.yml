@@ -4,8 +4,12 @@ name: Functional Tests
 on: # yamllint disable-line rule:truthy
   push:
     branches:
-      - "main"
-  pull_request: {}
+      - main
+  pull_request:
+    paths:
+      - .github/workflows/functional-tests.yml
+      - src/**
+      - action.yml
 
 defaults:
   run:
