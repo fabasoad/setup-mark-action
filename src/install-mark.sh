@@ -42,18 +42,18 @@ checksums_path="${bin_path}/checksums.txt"
 curl -sL "${url}" -o "${tar_path}"
 curl -sL "${url_prefix}/checksums.txt" -o "${checksums_path}"
 
-if ! command -v sha256sum >/dev/null 2>&1; then
-  echo "::group::Installing sha256sum"
-  if [ "${RUNNER_OS}" = "macOS" ]; then
-    brew install coreutils
-  else
-    msg="sha256sum was not installed on the current ${RUNNER_OS} machine"
-    printf "[setup-mark-action] %s level=warn %s\n" "$(date +'%Y-%m-%d %T')" "${msg}"
-  fi
-  echo "::endgroup::"
-fi
+#if ! command -v sha256sum >/dev/null 2>&1; then
+#  echo "::group::Installing sha256sum"
+#  if [ "${RUNNER_OS}" = "macOS" ]; then
+#    brew install coreutils
+#  else
+#    msg="sha256sum was not installed on the current ${RUNNER_OS} machine"
+#    printf "[setup-mark-action] %s level=warn %s\n" "$(date +'%Y-%m-%d %T')" "${msg}"
+#  fi
+#  echo "::endgroup::"
+#fi
 
-if ! grep -qF "$(sha256sum "${tar_path}" | cut -d ' ' -f 1)" "${checksums_path}"; then
+if ! grep -qF "$(shasum -a 256 "${tar_path}" | cut -d ' ' -f 1)" "${checksums_path}"; then
   echo "::error title=Checksum error::Checksum is different from the downloaded binary"
   exit 1
 fi
