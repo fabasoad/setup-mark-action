@@ -40,6 +40,10 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
     hooks:
+      - id: check-executables-have-shebangs
+        stages: ["commit"]
+      - id: check-shebang-scripts-are-executable
+        stages: ["commit"]
       - id: check-merge-conflict
       - id: check-json
         stages: ["push"]
