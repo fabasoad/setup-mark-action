@@ -23,7 +23,7 @@ action:
 ```yaml
 - uses: fabasoad/setup-mark-action@v0
   with:
-    # (Optional) mark version. Defaults to "9.11.1".
+    # (Optional) mark version. Defaults to "latest".
     version: "9.11.1"
 ```
 
