@@ -2,13 +2,16 @@
 
 mark_version="$1"
 
+echo "::group::Validating if mark CLI is already installed"
 # shellcheck disable=SC2039
 if command -v mark >/dev/null 2>&1; then
   msg="$(mark --version) is already installed. Skipping installation."
   printf "[setup-mark-action] %s level=info %s\n" "$(date +'%Y-%m-%d %T')" "${msg}"
   exit 0
 fi
+echo "::endgroup::"
 
+echo "::group::Choosing correct binary file based on runner OS and architecture"
 if [ "${mark_version}" = "latest" ]; then
   url_prefix="https://github.com/kovetskiy/mark/releases/latest/download"
 else
@@ -34,19 +37,26 @@ if [ -z "${url}" ]; then
   echo "::error title=OS is not supported::${RUNNER_OS} ${RUNNER_ARCH} is not supported"
   exit 1
 fi
+echo "::endgroup::"
 
+echo "::group::Downloading binary"
 bin_path="${RUNNER_TEMP}/bin"
 mkdir -p "${bin_path}"
 tar_path="${bin_path}/mark.tar.gz"
 checksums_path="${bin_path}/checksums.txt"
 curl -sL "${url}" -o "${tar_path}"
 curl -sL "${url_prefix}/checksums.txt" -o "${checksums_path}"
+echo "::endgroup::"
 
-if ! grep -qF "$(sha256sum "${tar_path}")" "${checksums_path}"; then
+echo "::group::Validating checksum"
+if ! grep -qF "$(sha256sum "${tar_path}" | cut -d ' ' -f 1)" "${checksums_path}"; then
   echo "::error title=Checksum error::Checksum is different from the downloaded binary"
   exit 1
 fi
+echo "::endgroup::"
 
+echo "::group::Installing mark CLI"
 tar -xf "${tar_path}" -C "${bin_path}"
 rm -f "${tar_path}"
 echo "${bin_path}" >> "$GITHUB_PATH"
+echo "::endgroup::"
