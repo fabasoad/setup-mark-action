@@ -23,7 +23,7 @@ jobs:
       fail-fast: false
       matrix:
         os: ["ubuntu", "macos"]
-        version: ["9.11.1", "9.11.0", "9.10.1", "9.10.0", "9.9.0"]
+        version: ["latest", "9.12.0", "9.11.1", "9.11.0", "9.10.1", "9.10.0"]
     runs-on: ${{ matrix.os }}-latest
     steps:
       - name: Checkout ${{ github.repository }}

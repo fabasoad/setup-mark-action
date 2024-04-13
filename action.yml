@@ -9,7 +9,7 @@ inputs:
   version:
     description: "mark version."
     required: false
-    default: "9.11.1"
+    default: "latest"
 runs:
   using: "composite"
   steps:
