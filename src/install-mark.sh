@@ -9,18 +9,24 @@ if command -v mark >/dev/null 2>&1; then
   exit 0
 fi
 
+if [ "${mark_version}" = "latest" ]; then
+  url_prefix="https://github.com/kovetskiy/mark/releases/latest/download"
+else
+  url_prefix="https://github.com/kovetskiy/mark/releases/download/${mark_version}"
+fi
+
 url=""
 if [ "${RUNNER_OS}" = "macOS" ]; then
   if [ "${RUNNER_ARCH}" = "X64" ]; then
-    url="https://github.com/kovetskiy/mark/releases/download/${mark_version}/mark_Darwin_x86_64.tar.gz"
+    url="${url_prefix}/mark_Darwin_x86_64.tar.gz"
   elif [ "${RUNNER_ARCH}" = "ARM64" ]; then
-    url="https://github.com/kovetskiy/mark/releases/download/${mark_version}/mark_Darwin_arm64.tar.gz"
+    url="${url_prefix}/mark_Darwin_arm64.tar.gz"
   fi
 elif [ "${RUNNER_OS}" = "Linux" ]; then
   if [ "${RUNNER_ARCH}" = "X64" ]; then
-    url="https://github.com/kovetskiy/mark/releases/download/${mark_version}/mark_Linux_x86_64.tar.gz"
+    url="${url_prefix}/mark_Linux_x86_64.tar.gz"
   elif [ "${RUNNER_ARCH}" = "ARM64" ]; then
-    url="https://github.com/kovetskiy/mark/releases/download/${mark_version}/mark_Linux_arm64.tar.gz"
+    url="${url_prefix}/mark_Linux_arm64.tar.gz"
   fi
 fi
 
@@ -32,7 +38,15 @@ fi
 bin_path="${RUNNER_TEMP}/bin"
 mkdir -p "${bin_path}"
 tar_path="${bin_path}/mark.tar.gz"
+checksums_path="${bin_path}/checksums.txt"
 curl -sL "${url}" -o "${tar_path}"
+curl -sL "${url_prefix}/checksums.txt" -o "${checksums_path}"
+
+if ! grep -qF "$(shasum -a 256 "${tar_path}" | cut -d ' ' -f 1)" "${checksums_path}"; then
+  echo "::error title=Checksum error::Checksum is different from the downloaded binary"
+  exit 1
+fi
+
 tar -xf "${tar_path}" -C "${bin_path}"
 rm -f "${tar_path}"
 echo "${bin_path}" >> "$GITHUB_PATH"
