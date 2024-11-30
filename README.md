@@ -24,7 +24,7 @@ action:
 - uses: fabasoad/setup-mark-action@v1
   with:
     # (Optional) mark version. Defaults to "latest".
-    version: "11.2.0"
+    version: "11.3.0"
 ```
 
 ## Outputs
