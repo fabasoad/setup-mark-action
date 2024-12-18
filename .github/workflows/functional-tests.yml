@@ -10,6 +10,9 @@ on: # yamllint disable-line rule:truthy
       - .github/workflows/functional-tests.yml
       - src/**
       - action.yml
+  schedule:
+    # Every Friday at 09:00 JST
+    - cron: "0 0 * * 5"
 
 defaults:
   run:
