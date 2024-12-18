@@ -16,15 +16,29 @@ defaults:
     shell: sh
 
 jobs:
+  get-versions:
+    name: Get 5 latest versions
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      versions: ${{ steps.prepare-list.outputs.versions }}
+    steps:
+      - name: Prepare list
+        id: prepare-list
+        run: |
+          url="https://api.github.com/repos/kovetskiy/mark/releases"
+          versions=$(curl -s "${url}" | jq -c '[.[0:5][].tag_name] | . += ["latest"]')
+          echo "versions=${versions}" >> "$GITHUB_OUTPUT"
   setup-mark:
     name: Setup mark
+    needs: [get-versions]
+    runs-on: ${{ matrix.os }}-latest
     timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
         os: ["ubuntu", "macos"]
-        version: ["latest", "11.3.0", "11.2.0", "11.1.0", "11.0.1", "11.0.0"]
-    runs-on: ${{ matrix.os }}-latest
+        version: ${{ fromJSON(needs.get-versions.outputs.versions) }}
     steps:
       - name: Checkout ${{ github.repository }}
         uses: actions/checkout@v4
