@@ -7,21 +7,73 @@ branding:
   color: gray-dark
 inputs:
   version:
-    description: "mark version."
+    description: mark version. Defaults to the latest version.
     required: false
     default: "latest"
+  force:
+    description: |
+      If "false" skips installation if mark is already installed. If "true"
+      installs mark in any case. Defaults to "false".
+    required: false
+    default: "false"
+  github-token:
+    description: |
+      GitHub token that is used to send requests to GitHub API such as downloading
+      asset. Defaults to the token provided by GitHub Actions environment.
+    required: false
+    default: ${{ github.token }}
+outputs:
+  installed:
+    description: Whether mark was installed or not.
+    value: "${{ steps.install-mark.outcome == 'success' }}"
 runs:
   using: "composite"
   steps:
+    - name: Fail
+      if: ${{ runner.os == 'Windows' }}
+      run: |
+        echo "::error title=OS is not supported::${RUNNER_OS} ${RUNNER_ARCH} is not supported"
+        exit 1
+      shell: sh
+
     - name: Validate inputs
       env:
         INPUT_VERSION: "${{ inputs.version }}"
-      run: ./validate-inputs.sh "${INPUT_VERSION}"
+        INPUT_FORCE: "${{ inputs.force }}"
+      run: ./validate-inputs.sh "${INPUT_VERSION}" "${INPUT_FORCE}"
       shell: sh
       working-directory: ${{ github.action_path }}/src
-    - name: Install kovetskiy/mark
+
+    - name: Collect info
+      id: info
       env:
-        INPUT_VERSION: "${{ inputs.version }}"
-      run: ./install-mark.sh "${INPUT_VERSION}"
+        INPUT_FORCE: "${{ inputs.force }}"
+      run: ./collect-info.sh "${INPUT_FORCE}"
       shell: sh
-      working-directory: ${{ github.action_path }}/src
+      working-directory: "${{ github.action_path }}/src"
+
+    - name: Download binary
+      if: ${{ steps.info.outputs.bin-installed == 'false' }}
+      id: download-binary
+      uses: robinraju/release-downloader@v1
+      with:
+        repository: "kovetskiy/mark"
+        latest: "${{ inputs.version == 'latest' }}"
+        tag: "${{ inputs.version == 'latest' && '' || inputs.version }}"
+        fileName: "mark_${{ runner.os == 'Linux' && 'Linux' || 'Darwin' }}_${{ startsWith(runner.arch, 'ARM') && 'arm64' || 'x86_64' }}.tar.gz"
+        extract: "true"
+        out-file-path: "${{ steps.info.outputs.bin-dir }}"
+        token: "${{ inputs.github-token }}"
+
+    - name: Install mark
+      if: ${{ steps.info.outputs.bin-installed == 'false' }}
+      id: install-mark
+      run: |
+        chmod +x mark
+        echo "$(pwd)" >> "$GITHUB_PATH"
+      shell: sh
+      working-directory: ${{ steps.info.outputs.bin-path }}
+
+    - name: Print version
+      run: mark --version
+      shell: sh
