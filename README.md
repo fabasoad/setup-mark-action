@@ -8,15 +8,19 @@
 
 This action installs [mark](https://github.com/kovetskiy/mark) CLI tool.
 
-Supported OS: Linux and macOS.
+## Supported OS
+
+<!-- prettier-ignore-start -->
+| OS      |                    |
+|---------|--------------------|
+| Windows | :x:                |
+| Linux   | :white_check_mark: |
+| macOS   | :white_check_mark: |
+<!-- prettier-ignore-end -->
 
 ## Prerequisites
 
-The following tools have to be available on a runner prior using this GitHub
-action:
-
-- [curl](https://curl.se/)
-- [tar](https://www.gnu.org/software/tar/)
+None.
 
 ## Inputs
 
@@ -25,8 +29,19 @@ action:
   with:
     # (Optional) mark version. Defaults to "latest".
     version: "11.3.0"
+    # (Optional) If "false" skips installation if mark is already installed.
+    # If "true" installs mark in any case. Defaults to "false".
+    force: "false"
+    # (Optional) GitHub token that is used to send requests to GitHub API such
+    # as downloading asset. Defaults to the token provided by GitHub Actions
+    # environment.
+    github-token: "${{ github.token }}"
 ```
 
 ## Outputs
 
-None.
+<!-- prettier-ignore-start -->
+| Name      | Description                       | Example |
+|-----------|-----------------------------------|---------|
+| installed | Whether mark was installed or not | `true`  |
+<!-- prettier-ignore-end -->

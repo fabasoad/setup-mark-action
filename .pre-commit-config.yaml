@@ -22,7 +22,7 @@ repos:
       - id: detect-secrets
         stages: ["pre-commit", "pre-push"]
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.21.2
+    rev: v8.22.1
     hooks:
       - id: gitleaks
         stages: ["pre-commit", "pre-push"]
@@ -54,7 +54,7 @@ repos:
         stages: ["pre-push"]
   # GitHub Actions
   - repo: https://github.com/rhysd/actionlint
-    rev: v1.7.4
+    rev: v1.7.6
     hooks:
       - id: actionlint
         args: ["-pyflakes="]
