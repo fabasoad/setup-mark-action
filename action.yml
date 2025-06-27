@@ -50,7 +50,7 @@ runs:
         INPUT_FORCE: "${{ inputs.force }}"
       run: ./collect-info.sh "${INPUT_FORCE}"
       shell: sh
-      working-directory: "${{ github.action_path }}/src"
+      working-directory: ${{ github.action_path }}/src
 
     - name: Download binary
       if: ${{ steps.info.outputs.bin-installed == 'false' }}

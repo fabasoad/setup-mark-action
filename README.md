@@ -45,3 +45,7 @@ None.
 |-----------|-----------------------------------|---------|
 | installed | Whether mark was installed or not | `true`  |
 <!-- prettier-ignore-end -->
+
+## Contributions
+
+![Alt](https://repobeats.axiom.co/api/embed/1be79a20b4fbab83c6533364636a85ded52d4bc2.svg "Repobeats analytics image")
