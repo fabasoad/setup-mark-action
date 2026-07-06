@@ -59,8 +59,8 @@ runs:
       with:
         repository: "kovetskiy/mark"
         latest: "${{ inputs.version == 'latest' }}"
-        tag: "${{ inputs.version == 'latest' && '' || inputs.version }}"
-        fileName: "mark_${{ runner.os == 'Linux' && 'Linux' || 'Darwin' }}_${{ startsWith(runner.arch, 'ARM') && 'arm64' || 'x86_64' }}.tar.gz"
+        tag: "${{ case(inputs.version == 'latest', '', inputs.version) }}"
+        fileName: "mark_${{ case(runner.os == 'Linux', 'Linux', 'Darwin') }}_${{ case(startsWith(runner.arch, 'ARM'), 'arm64', 'x86_64') }}.tar.gz"
         extract: "true"
         out-file-path: "${{ steps.info.outputs.bin-dir }}"
         token: "${{ inputs.github-token }}"
