@@ -30,7 +30,7 @@ jobs:
     steps:
       - name: Get releases
         id: github-releases
-        uses: yakubique/github-releases@v1.2
+        uses: yakubique/github-releases@2827d6f627dc289b8cbbc9b4d030956d67c37c68 # v1.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
