@@ -28,7 +28,7 @@ None.
 - uses: fabasoad/setup-mark-action@v1
   with:
     # (Optional) mark version. Defaults to "latest".
-    version: "11.3.0"
+    version: "16.5.0"
     # (Optional) If "false" skips installation if mark is already installed.
     # If "true" installs mark in any case. Defaults to "false".
     force: "false"
